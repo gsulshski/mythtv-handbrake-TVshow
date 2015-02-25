@@ -1,4 +1,5 @@
   mythtv-handbrake-TVshow
+
 Script that will remove commercials, X264 encode (apple tv3 preset) 
 
 mythtv-comm-remov-x264-noautom.sh   %CHANID%, %STARTTIMEUTC%
@@ -23,7 +24,7 @@ Script to fetch TV show metadata and save in Plex/Kodi directory/filename conven
  
    $1 = Channel Id of Recorded Program
    $2 = Start Time of Recorded Prog
- , %CHANID%, %STARTTIMEUTC%
+   %CHANID%, %STARTTIMEUTC%
  
     rename and move m4v file to a Plex Compliant Naming Convention
      chanid_starttime_NOC.mpg to Title -sxxeyy - subtitle  or
@@ -37,9 +38,10 @@ Script to fetch TV show metadata and save in Plex/Kodi directory/filename conven
 
 
 Prereq: 
-OSX Mavericks and beyond
-Mythtv 0.27.4 and beyond
-A recorded TV Program 
-Handbrake CLI 0.10 and beyond
+OSX Mavericks and beyond ;
+Mythtv 0.27.4 and beyond ;
+A recorded TV Program ;
+ Handbrake CLI 0.10 and beyond
+
 
 
