@@ -203,5 +203,93 @@ if you don't have permission,  sudo mythtv-comm-removal-x264-noautom 1780 201501
 
 
 
-Testing of the script....
+Testing of the script  mythtv-comm-removal-x264-noautom.sh
+
+
+How does this script work and what might you need to do...
+
+
+Algorithm:
+
+mythtv-comm-removal-x264-noautom.sh and pass it the parameters of chanid and starttime
+
+Chanid=$1
+Start_time=$2
+MYTHREC_DIR="/volumes/macintosh\ HD\ 2/Mythtv/default"
+MYTHTRANSCODE_DIR="/volumes/macintosh\ HD\ 2/Mythtv/transcode"
+HANDBRAKE_DIR=/Applications
+
+
+$1 is the first parameter -  chanid  ..eg 1780
+$2 is the starttimeUTC -  eg 2015011920000
+
+Next ..it checks to make sure that the directories exist and moves the recording from the recording directory to the transcode directory for processing
+
+  Go to Myth Default Directory and move file to Transcode dir
+eval cd "$MYTHREC_DIR" || error_exit "CD_to_Recording_Directory_Not_found"
+eval mv $MYTHREC_DIR/$1_$2.mpg $MYTHTRANSCODE_DIR/ || error_exit "Moving_Source_MPEG_file_to_transcode_directory_failed"
+eval cd $MYTHTRANSCODE_DIR || error_exit "CD_to_Transcode_Directory_Failed"
+
+
+creates a process id and tries to give it the lowest priority so that you can continue to use your machine while transcoding goes
+Also, the proces id will be used to create a temporary directory so that you can run more than one transcoding at the same time...
+  PID of this process. We'll create a working directory named with this ID
+MYPID=$$
+
+  play nice with other processes..set at average ..  -10 is highest priority ...   +10  is lowest priority
+renice 10 -p $MYPID
+
+
+To remove commercials you have to setup your recordings to actually mark the commericals into a cutlist...
+( I will look this up and post here, in the myth backend you will want to select the remove commerical checkbox for recordings)
+
+These next three steps will generate a cultist and transcode a new copy of the TV show without commercials
+this will create a new file  chanid_starttime_NOC.mpg that will be used for the trancoding (Handbrake)
+
+If you don’t want commercial removal…you can modify or remove these instructions or never turn on the commercial removal checkbox…  this will transcode the original file again…. I find that this step takes about 1/10 the time compared to the transcoding.  
+
+Note: the commercial removal is far from being perfect!  Depending on when you start the recording (on the hr, 1 min before, etc) you can get some odd removals..and you can lose some show content. I would say 85% of the time it is satisfactory to me
+
+
+mythutil --gencutlist --chanid $Chanid --starttime $Start_time || error_exit  "Generating_Cutlist_Failed"
+   Get the cultist for the recorded program based on running mythutil  for input to the mythtranscode step
+
+mythutil --getcutlist --chanid $Chanid --starttime $Start_time || error_exit  "Getting_Cutlist_Failed"
+
+
+  Transcode the mpeg-ts to mpeg-ps while removing the commercial content from the cutlist
+
+
+mythtranscode --mpeg2 --honorcutlist --showprogress -i $1_$2.mpg -o $1_$2_NOC.mpg || error_exit  "Transcoding_to_Remove_Commericals_Failed"
+
+
+
+Transcode to x264 with Handbrake with Apple TV preset plus large-file and decomb settings
+
+This is running Handbrake cli…..with Apple tV 3 presets… you can change this to whatever preset or custom settings that you want or need
+
+
+$HANDBRAKE_DIR/HandBrakeCLI -i $1_$2_NOC.mpg -o $1_$2_NOC.m4v --preset="AppleTV 3" --large-file --decomb 7:2:6:9:1:80 ||  error_exit  "Transcoding_to_x264_Failed"
+
+
+
+remove the original recording and then replace it with the commercial free one
+
+Note: the bad thing about this is if you want to save the original broadcast recording with commercials, it is deleted in this script in favor of saving the commercial removed one.  You could change this…
+This moves the files (transcode file, commercial removed recording back to the original spot, and map file)
+
+
+rm -f $1_$2.mpg || error_exit  "Removing_original_mpg_source"
+
+mv $1_$2_NOC.mpg $1_$2.mpg || error_exit  "Replacing_mpg_transcode_commerical_source"
+mv $1_$2_NOC.mpg.map $1_$2.mpg.map || error_exit  "Replacing_mpg_map_source"
+
+ Cleanup Files and move sorces files back  mpg (with commercials) and m4v (x264)
+
+
+eval mv $1_$2*  $MYTHREC_DIR/ || error_exit  "Moving_Source_and_Transcoded_files_back_failed"
+
+
+
+
 
