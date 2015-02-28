@@ -1,4 +1,4 @@
-                            Mythtv Script Detail Instructions
+                                                 Mythtv Script Detail Instructions
 
 I will add screenshots
 
@@ -63,4 +63,145 @@ For the scripts,  I am using the AppleTV 3 preset.   I find the quality is fine 
 
 The script -  mythtv-comm-removal-x264-noautom.sh  uses the handbrake cli to do the transcode process and trying handbrake along will help with the installation process
 
+
+Mythtv-Comm-removal-x264-noautom.sh
+
+this is a bash script that you will need to edit and create as an executable script
+
+
+You can use Xcode, TextWrangler or any script friendly editor
+
+1) Download the two scripts   mythtv-comm-removal-x264-noautom.sh to a safe place  (desktop, documents, etc)
+2) Using the terminal app,  you will want to copy these files to working directory for testing
+
+
+For Mythtv,  you should have created Storage Directories
+
+  see https://www.mythtv.org/wiki/MythTV-HOWTO   for everything on howto's
+
+In the script default set is
+
+/volumes/macintosh\ HD\ 2/Mythtv/default
+
+So, in the setup for these scripts the following are assumed
+
+TV Recordings are in  /volumes/macintosh\ HD\ 2/Mythtv/default
+
+TV Recordings are moved from this default location to a separate directory for transcoding
+
+this scripts directory for the transcode is..   /volumes/macintosh\ HD\ 2/Mythtv/transcode
+
+You can change the scripts to whatever directory structure you want...
+
+I would recommend to put the scripts in the transcode directory and test them out from there...
+
+
+3)  Create the transcode directory
+
+in a terminal window,  mkdir PATHYOUWANTFORTRANSCODEDIRECTORY
+
+example   mkdir "/volumes/macintosh\ HD\ 2/Mythtv/transcode"
+
+4) Go to that directory
+
+in a terminal window,  cd PATHYOUWANTFORTRANSCODEDIRECTORY
+
+example   cd "/volumes/macintosh\ HD\ 2/Mythtv/transcode"
+
+
+5)copy scripts to the transcode directory initially for debug and testing
+
+ Use finder and copy and paste the file from your download location to the transcode directory for both scripts
+ or
+
+in a terminal window,  cp  PATHOFDOWNLOAD/*.sh  PATHYOUWANTFORTRANSCODEDIRECTORY
+
+example   cp ~Home/mythtv-comm-removal-x264-noautom.sh "/volumes/macintosh\ HD\ 2/Mythtv/transcode/"
+
+
+
+6) using an editor  (textwrangler, Xcode) ,  you will want to change the source and destination locations
+
+For the script -  mythtv-comm-removal-x264-noautom.sh
+
+Update the following areas..
+
+MYTHREC_DIR is the storage location where you are saving your tv shows..
+MYTHTRANSCODE_DIR is the new directory you just created in Step (3) above
+HANDBRAKE_DIR is the directory where you have Handbrake CLI saved
+
+MYTHREC_DIR="/volumes/macintosh\ HD\ 2/Mythtv/default"
+MYTHTRANSCODE_DIR="/volumes/macintosh\ HD\ 2/Mythtv/transcode"
+HANDBRAKE_DIR=/Applications
+
+
+save the file
+
+
+7) you will need to make this an executable script
+
+so in the transcode directory,   you will want to do a ls command
+
+in a terminal window,  ls -lt
+
+you should see the two script files
+
+in a terminal window,  mythtv-comm-removal-x264-noautom.sh
+
+if you don't have permissions,  use sudo mythtv-comm-removal-x264-noautom.sh
+you will be prompted for your password...
+
+now you have an edited and installed script..
+
+
+8) make sure that you have a TV recording to transcode ...
+
+Go to the directory where your TV recordings are.....check you STORAGE DIRECTORY settings
+
+In this script case,  that is the default location  ... volumes/macintosh\ HD\ 2/Mythtv/default
+
+in a terminal window,  cd PATHWHEREYOURRECORDINGSARE
+
+eg.   cd "/volumes/macintosh\ HD\ 2/Mythtv/default"
+
+
+find the recording
+
+in a terminal window in the recording directory,  ls -lt *.mpg
+
+you should see some file(s) that are your recordings..
+
+
+They have the format   chanid_startutcdatetime.mpg
+
+eg    1780_2015011920000.mpg
+
+1780 ..channel is 1+Real channel  = 1+780 ...1780
+2015011920000 .. 2015 is the yes  0119 is the date 20000 is 20th hr of the day (UTC/GMT= Greenwich Time)
+
+write down or you can copy the long file name by selecting the name with your cursor from the ls -lt command in the terminal window
+
+go back to the transcode directory
+
+in a terminal window in the recording directory,  cd PATHYOUWANTFORTRANSCODEDIRECTORY
+
+eg cd ""/volumes/macintosh\ HD\ 2/Mythtv/transcode"
+
+
+9)  Now you are going to try out your script to see if it works...
+
+in a terminal window in the transcoding directory,
+
+mythtv-comm-removal-x264-noautom chanid starttime
+
+eg..mythtv-comm-removal-x264-noautom 1780 2015011920000
+
+note: you have to have a space and not an underscore between the chanid and starttime
+
+if you don't have permission,  sudo mythtv-comm-removal-x264-noautom 1780 2015011920000
+
+
+
+
+Testing of the script....
 
