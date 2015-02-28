@@ -278,6 +278,8 @@ remove the original recording and then replace it with the commercial free one
 Note: the bad thing about this is if you want to save the original broadcast recording with commercials, it is deleted in this script in favor of saving the commercial removed one.  You could change this…
 This moves the files (transcode file, commercial removed recording back to the original spot, and map file)
 
+A x264 transcode file is created with a name of  chanid_starttime_NOC.m4v
+
 
 rm -f $1_$2.mpg || error_exit  "Removing_original_mpg_source"
 
@@ -289,6 +291,117 @@ mv $1_$2_NOC.mpg.map $1_$2.mpg.map || error_exit  "Replacing_mpg_map_source"
 
 eval mv $1_$2*  $MYTHREC_DIR/ || error_exit  "Moving_Source_and_Transcoded_files_back_failed"
 
+
+
+Testing of the script  mythtv-metadata-fetch-noautom.sh
+
+Algorithm:
+
+
+mythtv-comm-removal-x264-noautom.sh and pass it the parameters of chanid and starttime
+
+This takes a completed transcode file from the previous script  and then looks up in TVVDb database what the metadata for the TV recording to create a Kodi/Plex filename and file structure.
+
+
+path to MythTV transcoding tools
+
+1) You will need to update the paths for your system
+
+  I don't think the installprefix is used..but this is where some ot the scripts are found for mythtv if you used Macports for Mythtv
+
+  TVDDBPATh is where the python script is found to do the fetching of the metadata if you used Macports for Mythtv...otherwise you will need to udpate this to where it is found'
+  MYSQLPATH is where the MYSQL database for your MYTHTV setup and recordings are stored if you used MacPorts for Mythtv
+  MYTHTRANSCODE_DIR could be the same temporary directory you used for the previous script
+  MYTVSHOW_DIR is a new directory where you want to save your transcoded and newly named files
+
+  You will want to create this TVSHOW directory before you run this script...
+
+
+in a terminal window,  cd to THEDIRECTORYJUSTABOVETHETVSHOWDIRECTORY
+
+eg.   cd "/volumes/macintosh\ HD\ 2/Mythtv/default"
+
+in a terminal window at THEDIRECTORYJUSTABOVETHETVSHOWDIRECTORY,  mkdir "TV SHOWS"
+
+Mac install directory for macport tools
+
+
+INSTALLPREFIX=/opt/local/bin
+TTVDBPath=/opt/local/share/mythtv/metadata/Television
+MySQLPath=/opt/local/lib/mariadb/bin
+MYTHTRANSCODE_DIR="/volumes/macintosh HD 2/Mythtv/transcode"
+MYTHTVSHOW_DIR="/volumes/macintosh HD 2/Mythtv/default/TV Shows"
+
+
+
+This section just sets up the directories, mythtv recordings SQL database and output directory path
+
+You will have to update the OUTDIR path...
+
+
+
+
+ a temporary working directory (must be writable by mythtv user)
+
+TEMPDIR="/volumes/macintosh HD 2/Mythtv/transcode"
+
+
+ MySQL database login information (from mythconverg database)
+
+DATABASEUSER="mythtv"
+DATABASEPASSWORD="mythtv"
+DATABASE="mythconverg"
+
+
+ PID of this process. We'll create a working directory named with this ID
+ This will allow for multiple recordings, fetch metadata
+
+MYPID=$$
+OUTDIR="/volumes/macintosh HD 2/Mythtv/Default"
+
+ play nice with other processes, ionice not supported in OSX
+
+renice 0 -p $MYPID
+
+
+# make working dir, and enter working dir
+
+mkdir "$TEMPDIR"/mythtmp-$MYPID
+cd "$TEMPDIR"/mythtmp-$MYPID
+
+
+The rest of the script will access the recording information from the mythtv SQL database
+
+Then check via TVVDB script whether there is metadata (title, episode, year, tvshow name, etc
+
+  Build the New filename with the following forms:
+    If the XML Title is blank..then use the mysql  $TVTITLE - $TVSUBTITLE
+   (note: $TVSubtitle = the recording date and time if the subtitle is blank)
+   Else if
+         if  season is blank.. then Season=Reldate
+         if  episode is blank  then  use the  title - yyyy-mm-dd - subtitle form
+                 Else if
+                       Title - sxxeyy - subtitle form
+                 end if
+   end if
+
+
+ )
+
+If the metdata data is found
+
+
+ Move Transcoded x264 files to the TV shows directory structure
+      /TV Shows
+        /Title
+         /Season
+           Final_form.m4v
+
+
+
+
+
+Then this newly formed file name will be moved to this newly formed directory structure..
 
 
 
