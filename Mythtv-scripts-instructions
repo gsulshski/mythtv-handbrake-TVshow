@@ -1,0 +1,66 @@
+                            Mythtv Script Detail Instructions
+
+I will add screenshots
+
+  There are two bash scripts that need to be modified and installed.
+
+Prerequisites:
+
+Fundamental Prerequisites:
+
+Mavericks (OSX) and beyond ..installed and working
+
+System that can handle transcoding a large HD or SD TV recording in an acceptable time.
+  For example,  a 2012 Mac Mini i7 2.3 GHZ can transcode a HD TV show in about the same time that the recording takes.  This system can still handle a recording and watching a show while this is happening.
+
+  You will have to consider when and how you want to start these scripts depending on your system and view needs.
+
+
+Mythtv installed and working
+
+I would recommend Macports for Mythtv but other methods that are simpler are fine as well:
+
+MacPorts for Mythtv
+
+https://www.mythtv.org/wiki/MacPorts
+
+There is a download or build section....  this is key of whether you want to install Mythtv and build it on your system  or download a pre-built system
+
+Installing the Mythtv backend and front end (in my opinion) is complicated.  Good luck.
+
+Please configure your mythtv to be able to record a TV show.
+
+I would recommend installing Mythweb to use a web based interface for scheduling and controlling your recordings
+
+https://www.mythtv.org/wiki/MythWeb
+
+This is also a complicated process but well worth it (but is optional)
+
+
+
+Handbrake
+
+The point of Handbrake is transcoding a mpegts file that is recorded by mythtv to a format that is compatible with your devices (along with it being smaller)
+
+Please install Handbrake and Handbrake CLI
+
+https://handbrake.fr/downloads.php
+   (Download the Mac 64 bit version) for the GUI version
+   Also, go to the other category and go to the screen to download the CLI (Command line Interface) version for the MAC
+
+Please use Handbrake (GUI) first and try to transcode a file that you want to convert
+  Please read how Handbrake works via documentation on website
+  I would focus on the presets available...
+
+Repeat the process by opening a terminal session via the terminal app  (Typicallyfound in Application under Utilities)
+
+https://trac.handbrake.fr/wiki/CLIGuide
+
+This link will explain how to use the command line interface for Handbrake.   I would focus on the presets.
+
+For the scripts,  I am using the AppleTV 3 preset.   I find the quality is fine for playback from a large HD Plasma screen to an iPhone.
+
+
+The script -  mythtv-comm-removal-x264-noautom.sh  uses the handbrake cli to do the transcode process and trying handbrake along will help with the installation process
+
+
