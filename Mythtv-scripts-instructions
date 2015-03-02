@@ -404,5 +404,39 @@ If the metdata data is found
 Then this newly formed file name will be moved to this newly formed directory structure..
 
 
+Once you have a debugged and working scripts,  you can make them user jobs such that these two scripts are run when ever you have a recording
+
+
+1) You need to update the mythtv backend to allow metadata lookup, transcoding and commerical-detection
+
+Go to mythtv backend,  General and forward to job queue
+
+Check the allow metadata lookup
+Check the allow commercial detection jobs
+Check the allow transcoding
+
+You will want to select Job #1 and Job #2  ...once you enter them from step 2 below
+
+Check start auto commerical jobs when recording starts
+Commerical detection command ->   mythcommflag
+Transcoder command ->  mythtranscode
+
+
+
+2) Add two user jobs
+
+for Job#1 comment  ->  Remove Commercials and X264 Transcode Production
+for Job#1 command  ->  mythtv-comm-removal-x264-noautom.sh  %CHANID% %STARTTIMEUTC%'
+
+for Job#2 comment ->  Metadata Fetch, Rename and Move to Plex with TV show naming conventions
+for Job#2 command ->  mythtv-metadata-fetch-noautom.sh  %CHANID% %STARTTIMEUTC%
+
+
+For these scripts to work, you will have to add them to your $PATH and have the right access control so that the mythtv backend can queue and run these scripts..
+
+
+To be added...  Where to put the script (path) and the right script ownership...
+
+
 
 
