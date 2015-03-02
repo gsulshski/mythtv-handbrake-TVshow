@@ -1,13 +1,12 @@
 #!/bin/sh
 
-#  mythtv-metadata-fetch.sh
+#  mythtv-metadata-fetch-noautom.sh
 #  
 #
 #  Created by Gregory Ulsh on 2/8/14.
 #  Updated to work with Mariadb 5.5 on 11/2/14
 #       Changing mysql5 to mariadb
 #       Change to new hard drive on 11/9/14
-#
 #
 #  User Job for MythTV
 #
@@ -61,6 +60,7 @@ exit 1
 
 INSTALLPREFIX=/opt/local/bin
 TTVDBPath=/opt/local/share/mythtv/metadata/Television
+# MySQLPath=/opt/local/lib/mysql5/bin   (all other references are done without comments
 MySQLPath=/opt/local/lib/mariadb/bin
 MYTHTRANSCODE_DIR="/volumes/macintosh HD 2/Mythtv/transcode"
 MYTHTVSHOW_DIR="/volumes/macintosh HD 2/Mythtv/default/TV Shows"
@@ -235,7 +235,7 @@ then
    rm temp.xml
    Season="${2:0:4}"
 else
-    mv temp.xml "$OUTDIR"/$Inetref.xml
+   mv temp.xml "$OUTDIR"/$Inetref.xml
 fi
 
 
@@ -247,22 +247,22 @@ fi
 #           Final_form.m4v
 
 
-ls "$MYTHTVSHOW_DIR" || error_exit "TV_Shows_directory_is_not_found"
+ ls "$MYTHTVSHOW_DIR" || error_exit "TV_Shows_directory_is_not_found"
 
 if [ "$Title" == "" ]
 then
- ls "$MYTHTVSHOW_DIR/$TVTITLE" || mkdir "$MYTHTVSHOW_DIR/$TVTITLE" || error_exit "TVTile_Directory_not_created"
+  ls "$MYTHTVSHOW_DIR/$TVTITLE" ||  mkdir "$MYTHTVSHOW_DIR/$TVTITLE" || error_exit "TVTitle_Directory_not_created"
 else
- ls "$MYTHTVSHOW_DIR/$Title" || mkdir "$MYTHTVSHOW_DIR/$Title" || error_exit "TV_Tile_Directory_not_created"
+  ls "$MYTHTVSHOW_DIR/$Title" ||  mkdir "$MYTHTVSHOW_DIR/$Title" || error_exit "TV_Title_Directory_not_created"
 fi
 
 # Since Season has been fixed to be the year if not found in XML Data
 
 if [ "$Title" == "" ]
 then
-ls "$MYTHTVSHOW_DIR/$TVTITLE/$Season" || mkdir "$MYTHTVSHOW_DIR/$TVTITLE/$Season" || error_exit "TVT_Season_Directory_not_created"
+ ls "$MYTHTVSHOW_DIR/$TVTITLE/$Season" ||  mkdir "$MYTHTVSHOW_DIR/$TVTITLE/$Season" || error_exit "TVT_Season_Directory_not_created"
 else
-ls "$MYTHTVSHOW_DIR/$Title/Season $Season" || mkdir "$MYTHTVSHOW_DIR/$Title/Season $Season" || error_exit "TV_Season_Directory_not_created"
+ ls "$MYTHTVSHOW_DIR/$Title/Season $Season" ||  mkdir "$MYTHTVSHOW_DIR/$Title/Season $Season" || error_exit "TV_Season_Directory_not_created"
 fi
 
 # Currently writes over the recording
@@ -272,9 +272,9 @@ fi
 
 if [ "$Title" == "" ]
 then
-mv "$OUTDIR/$1_$2_NOC.m4v" "$MYTHTVSHOW_DIR/$TVTITLE/$Season/$Final_form.m4v" || error_exit "Transcoded_M4v_TV_not_moved_to_final_destination"
+ mv "$OUTDIR/$1_$2_NOC.m4v" "$MYTHTVSHOW_DIR/$TVTITLE/$Season/$Final_form.m4v" || error_exit "Transcoded_M4v_TV_not_moved_to_final_destination"
 else
-mv "$OUTDIR/$1_$2_NOC.m4v" "$MYTHTVSHOW_DIR/$Title/Season $Season/$Final_form.m4v" || error_exit "Transcoded_M4v_not_moved_to_final_destination"
+ mv "$OUTDIR/$1_$2_NOC.m4v" "$MYTHTVSHOW_DIR/$Title/Season $Season/$Final_form.m4v" || error_exit "Transcoded_M4v_not_moved_to_final_destination"
 fi
 
 
